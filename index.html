@@ -1,48 +1,601 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-		<title>reveal.js</title>
+    <title>Rust and C++</title>
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/slint.css" />
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2
-						<aside class="notes">
-						<p>Some notes</p>
-						</aside>
-						<p>Some slide text</p>
-						<aside class="notes">
-						<p>and some more notes</p>
-					</aside>
-				</section>
-			</div>
-		</div>
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <!-- TITLE -->
+          <section style="text-align: right; margins: 100px; width: 100%">
+            <h1 class="r-fit-text">Rust and C++</h1>
+            <h3>Tobias Hunger</h3>
+            <aside class="notes">
+              <p>Organisation stuff:</p>
+              <ul>
+                <li>Please tell me if I am too fast or too slow!</li>
+                <li>Slides will be available, list of links on last slide!</li>
+                <li>
+                  Feel free to ask questions, we will probably not have too much
+                  time at the end. I might not be able to answer all of them
+                  here, but I am around afterwards and will also provide ways to
+                  reach out online!
+                </li>
+              </ul>
+              <p>
+                When I proposed this presentation, the topic of interfacing with
+                C++ while not programming in C++ was hot. Chandler Carruth had
+                just announced Carbon a while back at CppNorth 2022, a
+                (experimental) language supposed to become somewhat safer than
+                C++ but has 100% interoperability with it.
+              </p>
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+              <p>
+                In the meantime Herb Sutter introduced cppfront at CppCon, a
+                transpiler that compiles "cpp2" into C++ and then builds it with
+                a standard C++ compiler.
+              </p>
+
+              <p>
+                Let us explore how well Rust is suited to extend existing C++
+                projects. Mozilla developed Rust to extend their existing C++
+                browser with safer code -- and Rust is actually shipped in
+                Firefox!
+              </p>
+
+              <p>
+                This way you get a much more stable and battle-tested language
+                to work in -- at the price of less seamless integration with
+                C++.
+              </p>
+            </aside>
+          </section>
+
+          <!-- MOTIVATION -->
+          <section>
+            <h3>Motivation</h3>
+            <ul>
+              <li>Long time C++ Developer</li>
+              <li class="fragment fade-in">Work on Slint, a UI toolkit written in and for Rust</li>
+              <ul class="fragment fade-in">
+                <li>We offer a native C++ API for Slint</li>
+                <li>We interact with existing C++ frameworks</li>
+              </ul>
+            </ul>
+            <aside class="notes">
+              <h3>C++ dev</h3>
+              <p>
+                20 or so years, most of the time on UI technologies and tooling.
+              </p>
+              <h3>Slint dev</h3>
+              <p>&hellip;still working on tooling&hellip;</p>
+              <h3>Directions</h3>
+              <p>
+                So I am interested in both directions of C++ integration:
+                Consuming C++ interfaces as well as providing them.
+              </p>
+            </aside>
+          </section>
+
+          <!-- TOPICS -->
+          <section>
+            <h2>Topics</h2>
+            <ul>
+              <li>Making Rust and C++ talk to each other</li>
+              <li>Build Projects mixing Rust and C++</li>
+            </ul>
+            <aside class="notes">
+              <h3>Talk</h3>
+              <p>
+                Generate bindings so that code in Rust can talk to code in C++ and the other way around.
+              </p>
+              <h3>Build</h3>
+              <p>Build projects that consist of rust code and C++ code</p>
+            </aside>
+          </section>
+        </section>
+
+        <section
+          data-background-image="slint-logo.svg"
+          data-background-size="120px"
+          data-background-position="right 5% top 5%"
+        >
+          <!-- TALKING -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
+            <h2>Making Rust and C++ talk to each other</h2>
+            <aside class="notes">
+              <p>Challenges:</p>
+              <ul>
+                <li>Rust has no defined ABI</li>
+                <li>... neither has C++ (compiler defined!)</li>
+                <li>
+                  Languages have different concepts like inheritance, lifetimes,
+                  templates, ...
+                </li>
+                <li>
+                  Data types do not match up, have different requirements (e.g.
+                  utf-8 encoded strings in rust)
+                </li>
+              </ul>
+              <p>Least common denominator: C foreign function interface</p>
+              <p>That will be used in one form or the other by everything discussed.</p>
+            </aside>
+          </section>
+
+          <!-- AUTOMATIC -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
+            <h2>Automatic Binding Generation</h2>
+            <ul>
+              <li class="fragment fade-in">
+                <bold><code>bindgen</code></bold
+                >: C and simple C++ &#8594; Rust
+              </li>
+              <li class="fragment fade-in">
+                <bold><code>cbindgen</code></bold
+                >: Rust &#8594; C or C++11 headers
+              </li>
+            </ul>
+            <aside class="notes">
+              <p>
+                Idea: Examine existing code and generate C FFI bindings from
+                that!
+              </p> 
+
+              <h3>bindgen</h3>
+
+              <p>Parses header files and generates a rust code out of it.</p>
+
+              <p>
+                Will try to convert whatever it can, skipping constructs it can
+                not handle.
+              </p>
+
+              <p>
+                Problems incl. templates, inline functions, exceptions,
+                automatically calling copy/move constructors, cross-language
+                inheritance.
+              </p>
+
+              <p>
+                Needs manual configuration to block types that don't work or
+                mark them as "opaque"
+              </p>
+
+              <h3>cbindgen</h3>
+
+              <p>
+                Parses rust code and exposes types and functions marked as
+                <code>repr("C")</code>.
+              </p>
+
+              <p>
+                Typically works reliably as the programmer has already put in
+                the hard work by marking up things.
+              </p>
+            </aside>
+          </section>
+
+          <!-- SEMI-AUTOMATIC -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
+            <h2>Semi-Automatic Binding Generation</h2>
+            <h3 class="fragment fade-in"><code>cxx</code> crate</h3>
+            <pre class="fragment fade-in"><code data-trim data-noescape data-line-numbers="1-2|3-6|8-12|14-21">
+#[cxx::bridge]
+mod ffi {
+    struct BlobMetadata {
+        size: usize,
+        tags: Vec&lt;String&gt;,
+    }
+
+    extern "Rust" {
+        type MultiBuf;
+
+        fn next_chunk(buf: &mut MultiBuf) -> &[u8];
+    }
+
+    unsafe extern "C++" {
+        include!("demo/include/blobstore.h");
+
+        type BlobstoreClient;
+
+        fn new_blobstore_client() -> UniquePtr&lt;BlobstoreClient&gt;;
+        fn put(&self, parts: &mut MultiBuf) -> u64;
+    }
+}</code></pre>
+            <aside class="notes">
+              <p>Requires custom code/data to generate bindings from.</p>
+
+              <h3>cxx</h3>
+
+              <p>
+                Most widely used crate in this area, other build on top or
+                beside this one.
+              </p>
+
+              <h3>code</h3>
+
+              <p>Code taken straight from crates demo!</p>
+
+              <p>
+                Aim: Describe interface and generate <em>safe</em> and <em>fast</em> bindings from and to C++ code.
+              </p>
+
+              <p>
+                Also tries to be fast: Zero copy, no transformations going
+                between languages => custom types like
+                <code>CxxString</code> in rust and <code>rust::String</code> in
+                C++!
+              </p>
+
+
+              <p>Interface definition in rust. Macro for the win!</p>
+
+              <p>
+                Shared data structures go straight into the
+                <code>ffi</code> module. cxx maps data types.
+              </p>
+
+              <p>
+                structs and functions/methods exposed from Rust. Must be in
+                parent scope!
+              </p>
+
+              <p>
+                structs and functions/methods exposed from C++. Important! Add
+                unsafe/lifetimes here, which will be ignored in C++ but leads to
+                better bindings. cxx will assert that signatures match!
+              </p>
+
+              <p>
+                Code is generated from this definition that implements C FFI +
+                nicer facade in front of that:
+              </p>
+              <ul>
+                <li>Rust side: Macro-based, so during rust build</li>
+                <li>
+                  C++: As part of build.rs/via command line tool. Needs build
+                  system integration!
+                </li>
+              </ul>
+
+            </aside>
+          </section>
+
+          <!-- MANUAL -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
+          <section data-auto-animate>
+            <h2>No Binding Generation</h2>
+            <ul>
+              <li class="fragment fade-in"><code>cpp</code> crate</li>
+            </ul>
+            <aside class="notes">
+              <p>Use C++ code directory :-)</p>
+
+              <h3>cxx</h3>
+
+              <p>
+                Some macros that enable embedding of C++ code right into the
+                middle of your rust code!
+              </p>
+              <p>
+                Works by extracting the C++ bits, wrapping them into function
+                definitions and calling them in the right places.
+              </p>
+              <p>What does that look like?</p>
+            </aside>
+          </section>
+
+          <section data-auto-animate>
+            <pre><code data-trim data-noescape>
+fn notify(&self) {
+  let obj = self.obj;
+
+
+
+
+
+
+
+
+
+}</code></pre>
+            <aside class="notes"></aside>
+          </section>
+
+          <section data-auto-animate>
+            <pre><code data-trim data-noescape data-line-numbers=3-10>
+fn notify(&self) {
+  let obj = self.obj;
+  cpp!(unsafe [obj as "QObject*"] {
+    QTimer::singleShot(0, [obj = QPointer(obj)]() {
+      auto data = queryInterface(obj)->data();
+
+
+            
+      QAccessible::updateA18y(&QEvent(obj));
+    });
+  });
+}</code></pre>
+            <aside class="notes"></aside>
+          </section>
+
+          <section data-auto-animate>
+            <pre><code data-trim data-noescape data-line-numbers=6-8>
+fn notify(&self) {
+  let obj = self.obj;
+  cpp!(unsafe [obj as "QObject*"] {
+    QTimer::singleShot(0, [obj = QPointer(obj)]() {
+      auto data = queryInterface(obj)->data();
+      rust!(rearm [data: Pin<&A18yItemData> as "void*"] {
+        data.arm_state_tracker();
+      });
+      QAccessible::updateA18y(&QEvent(obj));
+    });
+  });
+}</code></pre>
+            <aside class="notes"></aside>
+          </section>
+
+          <section data-auto-animate data-auto-animate-restart>
+            <h2>Summary</h2>
+            <ul>
+              <li>A whole range of options to talk to C++ code</li>
+            </ul>
+          </section>
+
+          <section data-auto-animate data-auto-animate-restart>
+            <h2>Summary</h2>
+            <ul>
+              <li>A whole range of options to talk to C++ code</li>
+              <li>Not built into Rust</li>
+            </ul>
+          </section>
+
+          <section data-auto-animate data-auto-animate-restart>
+            <h2>Summary</h2>
+            <ul>
+              <li>A whole range of options to talk to C++ code</li>
+              <li>Not built into Rust</li>
+              <ul>
+                <li>External code generator</li>
+                <li>Macros!</li>
+              </ul>
+            </ul>
+          </section>
+        </section>
+
+        <section
+          data-background-image="slint-logo.svg"
+          data-background-size="120px"
+          data-background-position="right 5% top 5%"
+        >
+          <section>
+            <h1>Building Mixed Projects</h1>
+
+            <aside class="notes">
+              <p>
+                Now that we know how to make C++ and Rust talk to each other,
+                how can we build the combined codebase? It depends on which
+                language implements the final binary.
+              </p>
+
+              <p>
+                Let's start with Cargo, the build-tool used in Rust. You will
+                have to deal with Cargo one way or the other.
+              </p>
+            </aside>
+          </section>
+
+          <section>
+            <h2>Cargo</h2>
+            <aside class="notes">
+              <p>
+                Cargo is the official, supported way to build Rust code. Calling
+                the compiler directly isn't supported!
+              </p>
+
+              <p>You will deal with Cargo to build the Rust side of things.</p>
+            </aside>
+          </section>
+
+          <section>
+            <h2>Cargo</h2>
+
+            <h3><code>build.rs</code></h3>
+            <aside class="notes">
+              <p>
+                If you want to build a rust binary linking to C/C++ code, then
+                you need to integrate generating that into cargo
+              </p>
+
+              <p>
+                You extend Cargo build adding a build.rs file. That's built
+                during the build and then executed to extend Cargos
+                functionality!
+              </p>
+            </aside>
+          </section>
+
+          <section>
+            <h2>Cargo</h2>
+
+            <h3><code>build.rs</code></h3>
+
+            <ul>
+              <li><code>cc</code> crate</li>
+              <li><code>cmake</code> crate</li>
+            </ul>
+
+            <aside class="notes">
+              <p>
+                To make C/C++ integration easier you can use crates as
+                dev-dependencyo (build time dependency!).
+              </p>
+
+              <p>
+                Popular are for example cc to drive the C/C++ compiler directly
+                or cmake to build a cmake project.
+              </p>
+
+              <p>
+                Of course you can also go the other direction: Let cmake drive
+                the build and delegate to cargo to build some rust code into a
+                library.
+              </p>
+            </aside>
+          </section>
+
+          <section>
+            <h2>CMake</h2>
+
+            <h3>corrosion</h3>
+
+            <aside class="notes">
+              <p>
+                The corrosion project on Github tries to make it simple to have
+                a cargo project as a subproject in CMake.
+              </p>
+
+              <p>
+                It will parse your cargo build system and expose all build
+                targets to cmake.
+              </p>
+            </aside>
+          </section>
+
+          <section>
+            <h2>CMake</h2>
+
+            <h3>corrosion</h3>
+            <pre><code data-trim data-noescape>
+cmake_minimum_required(VERSION 3.15)
+project(MyCoolProject LANGUAGES CXX)
+
+find_package(Corrosion REQUIRED)
+
+corrosion_import_crate(MANIFEST_PATH rust-lib/Cargo.toml)
+
+add_executable(cpp-exe main.cpp)
+target_link_libraries(cpp-exe PUBLIC rust-lib)</code></pre>
+            <aside class="notes"></aside>
+          </section>
+        </section>
+
+        <section
+          data-background-image="slint-logo.svg"
+          data-background-size="120px"
+          data-background-position="right 5% top 5%"
+        >
+          <section>
+            <h2>Thank you!</h2>
+            <p>Mail: tobias.hunger@slint-ui.com</p>
+            <p>Twitter: @t_hunger</p>
+          </section>
+
+          <section data-visibility="uncounted">
+            <h2>Links I</h2>
+            <ul>
+              <li>
+                <a href="https://youtu.be/omrY53kbVoA">Carbon announcement</a>
+              </li>
+              <li>
+                <a href="https://youtu.be/ELeZAKCN4tY">Cppfront announcement</a>
+              </li>
+              <li>
+                <a href="https://crates.io/crates/bindgen">rust-bindgen</a>
+              </li>
+              <li><a href="https://crates.io/crates/cbindgen">cbindgen</a></li>
+              <li>
+                <a
+                  href="https://endl.ch/content/cxx2rust-pains-wrapping-c-rust-example-qt5"
+                  >Challenges converting C++ to Rust</a
+                >
+              </li>
+              <li>
+                <a href="https://github.com/KDE/rust-qt-binding-generator"
+                  >KDE rust binding generator</a
+                >
+              </li>
+            </ul>
+          </section>
+
+          <section data-visibility="uncounted">
+            <h2>Links II</h2>
+            <ul>
+              <li>
+                <a href="https://github.com/KDE/rust-qt-binding-generator"
+                  >KDE rust binding generator</a
+                >
+              </li>
+              <li><a href="https://crates.io/crates/cxx">cxx crate</a></li>
+              <li><a href="https://crates.io/crates/cpp">cpp crate</a></li>
+              <li>
+                <a href="https://youtu.be/NpyRZsbdJXE"
+                  >Olivier Goffart talking about the cpp crate</a
+                >
+              </li>
+              <li><a href="https://crates.io/crates/cc">cc crate</a></li>
+              <li><a href="https://crates.io/crates/cmake">cmake crate</a></li>
+              <li>
+                <a href="https://github.com/corrosion-rs/corrosion"
+                  >corrosion-rs</a
+                >
+              </li>
+            </ul>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        controls: false,
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+
+        parallaxBackgroundImage: "background.jpg",
+        parallaxBackgroundSize: "5376px 3040px",
+      });
+    </script>
+  </body>
 </html>
