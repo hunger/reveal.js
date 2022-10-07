@@ -20,8 +20,10 @@
   <body>
     <div class="reveal">
       <div class="slides">
+
+        <!-- # INTRO -->
         <section>
-          <!-- TITLE -->
+          <!-- ## TITLE -->
           <section style="text-align: right; margins: 100px; width: 100%">
             <h1 class="r-fit-text">Rust and C++</h1>
             <h3>Tobias Hunger</h3>
@@ -66,12 +68,14 @@
             </aside>
           </section>
 
-          <!-- MOTIVATION -->
+          <!-- ## MOTIVATION -->
           <section>
             <h3>Motivation</h3>
             <ul>
               <li>Long time C++ Developer</li>
-              <li class="fragment fade-in">Work on Slint, a UI toolkit written in and for Rust</li>
+              <li class="fragment fade-in">
+                Work on Slint, a UI toolkit written in and for Rust
+              </li>
               <ul class="fragment fade-in">
                 <li>We offer a native C++ API for Slint</li>
                 <li>We interact with existing C++ frameworks</li>
@@ -92,7 +96,7 @@
             </aside>
           </section>
 
-          <!-- TOPICS -->
+          <!-- ## TOPICS -->
           <section>
             <h2>Topics</h2>
             <ul>
@@ -102,7 +106,8 @@
             <aside class="notes">
               <h3>Talk</h3>
               <p>
-                Generate bindings so that code in Rust can talk to code in C++ and the other way around.
+                Generate bindings so that code in Rust can talk to code in C++
+                and the other way around.
               </p>
               <h3>Build</h3>
               <p>Build projects that consist of rust code and C++ code</p>
@@ -110,12 +115,14 @@
           </section>
         </section>
 
+
+        <!-- # TALKING TO C++ AND RUST -->
         <section
           data-background-image="slint-logo.svg"
           data-background-size="120px"
           data-background-position="right 5% top 5%"
         >
-          <!-- TALKING -->
+          <!-- ## TALKING -->
           <section
             data-background-image="slint-logo.svg"
             data-background-size="120px"
@@ -137,17 +144,20 @@
                 </li>
               </ul>
               <p>Least common denominator: C foreign function interface</p>
-              <p>That will be used in one form or the other by everything discussed.</p>
+              <p>
+                That will be used in one form or the other by everything
+                discussed.
+              </p>
             </aside>
           </section>
 
-          <!-- AUTOMATIC -->
+          <!-- ## AUTOMATIC -->
           <section
             data-background-image="slint-logo.svg"
             data-background-size="120px"
             data-background-position="right 5% top 5%"
           >
-            <h2>Automatic Binding Generation</h2>
+            <h2>Automatic binding generation</h2>
             <ul>
               <li class="fragment fade-in">
                 <bold><code>bindgen</code></bold
@@ -162,7 +172,7 @@
               <p>
                 Idea: Examine existing code and generate C FFI bindings from
                 that!
-              </p> 
+              </p>
 
               <h3>bindgen</h3>
 
@@ -198,15 +208,17 @@
             </aside>
           </section>
 
-          <!-- SEMI-AUTOMATIC -->
+          <!-- ## SEMI-AUTOMATIC -->
           <section
             data-background-image="slint-logo.svg"
             data-background-size="120px"
             data-background-position="right 5% top 5%"
           >
-            <h2>Semi-Automatic Binding Generation</h2>
+            <h2>Semi-automatic binding generation</h2>
             <h3 class="fragment fade-in"><code>cxx</code> crate</h3>
-            <pre class="fragment fade-in"><code data-trim data-noescape data-line-numbers="1-2|3-6|8-12|14-21">
+            <pre
+              class="fragment fade-in"
+            ><code data-trim data-noescape data-line-numbers="1-2|3-6|8-12|14-21">
 #[cxx::bridge]
 mod ffi {
     struct BlobMetadata {
@@ -244,7 +256,8 @@ mod ffi {
               <p>Code taken straight from crates demo!</p>
 
               <p>
-                Aim: Describe interface and generate <em>safe</em> and <em>fast</em> bindings from and to C++ code.
+                Aim: Describe interface and generate <em>safe</em> and
+                <em>fast</em> bindings from and to C++ code.
               </p>
 
               <p>
@@ -253,7 +266,6 @@ mod ffi {
                 <code>CxxString</code> in rust and <code>rust::String</code> in
                 C++!
               </p>
-
 
               <p>Interface definition in rust. Macro for the win!</p>
 
@@ -284,30 +296,29 @@ mod ffi {
                   system integration!
                 </li>
               </ul>
-
             </aside>
           </section>
 
-          <!-- MANUAL -->
+          <!-- ## NO BINDING -->
           <section
             data-background-image="slint-logo.svg"
             data-background-size="120px"
             data-background-position="right 5% top 5%"
           >
-          <section data-auto-animate>
-            <h2>No Binding Generation</h2>
+            <h2>No binding generation</h2>
             <ul>
               <li class="fragment fade-in"><code>cpp</code> crate</li>
             </ul>
             <aside class="notes">
-              <p>Use C++ code directory :-)</p>
+              <p>Use C++ code directly! Of course you still need to do bindings for data types and such ;-)</p>
 
-              <h3>cxx</h3>
+              <h3>cpp</h3>
 
               <p>
                 Some macros that enable embedding of C++ code right into the
                 middle of your rust code!
               </p>
+
               <p>
                 Works by extracting the C++ bits, wrapping them into function
                 definitions and calling them in the right places.
@@ -316,9 +327,12 @@ mod ffi {
             </aside>
           </section>
 
-          <section data-auto-animate>
-            <pre><code data-trim data-noescape>
-fn notify(&self) {
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
+            <pre><code data-trim data-noescape>fn notify(&self) {
   let obj = self.obj;
 
 
@@ -330,77 +344,78 @@ fn notify(&self) {
 
 
 }</code></pre>
-            <aside class="notes"></aside>
+            <aside class="notes">
+              <p>Just write normal rust code...</p>
+            </aside>
           </section>
 
-          <section data-auto-animate>
-            <pre><code data-trim data-noescape data-line-numbers=3-10>
-fn notify(&self) {
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
+            <pre><code data-trim data-noescape data-line-numbers=3-8>fn notify(&self) {
   let obj = self.obj;
   cpp!(unsafe [obj as "QObject*"] {
-    QTimer::singleShot(0, [obj = QPointer(obj)]() {
-      auto data = queryInterface(obj)->data();
+    auto data = queryInterface(obj)->data();
 
 
             
-      QAccessible::updateA18y(&QEvent(obj));
-    });
+    QAccessible::updateA18y(&QEvent(obj));
   });
 }</code></pre>
-            <aside class="notes"></aside>
+            <aside class="notes">
+              <p>... then use the <code>cpp</code> macro and continue to write C++.</p>
+            </aside>
           </section>
 
-          <section data-auto-animate>
-            <pre><code data-trim data-noescape data-line-numbers=6-8>
-fn notify(&self) {
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
+            <pre><code data-trim data-noescape data-line-numbers=5-7>fn notify(&self) {
   let obj = self.obj;
   cpp!(unsafe [obj as "QObject*"] {
-    QTimer::singleShot(0, [obj = QPointer(obj)]() {
-      auto data = queryInterface(obj)->data();
-      rust!(rearm [data: Pin<&A18yItemData> as "void*"] {
-        data.arm_state_tracker();
-      });
-      QAccessible::updateA18y(&QEvent(obj));
+    auto data = queryInterface(obj)->data();
+    rust!(rearm [data: Pin<&A18yItemData> as "void*"] {
+      data.arm_state_tracker();
     });
+    QAccessible::updateA18y(&QEvent(obj));
   });
 }</code></pre>
-            <aside class="notes"></aside>
+            <aside class="notes">
+              <p>You can even use a <code>rust!</code> pseudo-macro to switch back into rust.</p>
+            </aside>
           </section>
 
+          <!-- ## SUMMARY -->
           <section data-auto-animate data-auto-animate-restart>
             <h2>Summary</h2>
             <ul>
-              <li>A whole range of options to talk to C++ code</li>
-            </ul>
-          </section>
-
-          <section data-auto-animate data-auto-animate-restart>
-            <h2>Summary</h2>
-            <ul>
-              <li>A whole range of options to talk to C++ code</li>
-              <li>Not built into Rust</li>
-            </ul>
-          </section>
-
-          <section data-auto-animate data-auto-animate-restart>
-            <h2>Summary</h2>
-            <ul>
-              <li>A whole range of options to talk to C++ code</li>
-              <li>Not built into Rust</li>
+              <li class="fragment fade-in">A whole range of options to talk to C++ code</li>
+              <li class="fragment fade-in">No C++ compatibility built into Rust</li>
               <ul>
-                <li>External code generator</li>
-                <li>Macros!</li>
+                <li class="fragment fade-in">External code generator</li>
+                <li class="fragment fade-in">Macros!</li>
               </ul>
             </ul>
           </section>
         </section>
 
+
+        <!-- # BUILD TOOLING -->
         <section
           data-background-image="slint-logo.svg"
           data-background-size="120px"
           data-background-position="right 5% top 5%"
         >
-          <section>
+          <!-- ## SETUP -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
             <h1>Building Mixed Projects</h1>
 
             <aside class="notes">
@@ -417,8 +432,21 @@ fn notify(&self) {
             </aside>
           </section>
 
-          <section>
+          <!-- ## CARGO -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
             <h2>Cargo</h2>
+
+            <h3 class="fragment fade-in"><code>build.rs</code></h3>
+
+            <ul>
+              <li class="fragment fade-in"><code>cc</code> crate</li>
+              <li class="fragment fade-in"><code>cmake</code> crate</li>
+            </ul>
+
             <aside class="notes">
               <p>
                 Cargo is the official, supported way to build Rust code. Calling
@@ -426,14 +454,9 @@ fn notify(&self) {
               </p>
 
               <p>You will deal with Cargo to build the Rust side of things.</p>
-            </aside>
-          </section>
 
-          <section>
-            <h2>Cargo</h2>
+              <h3>build.rs</h3>
 
-            <h3><code>build.rs</code></h3>
-            <aside class="notes">
               <p>
                 If you want to build a rust binary linking to C/C++ code, then
                 you need to integrate generating that into cargo
@@ -444,23 +467,12 @@ fn notify(&self) {
                 during the build and then executed to extend Cargos
                 functionality!
               </p>
-            </aside>
-          </section>
 
-          <section>
-            <h2>Cargo</h2>
+              <h3>cc and cmake</h3>
 
-            <h3><code>build.rs</code></h3>
-
-            <ul>
-              <li><code>cc</code> crate</li>
-              <li><code>cmake</code> crate</li>
-            </ul>
-
-            <aside class="notes">
               <p>
                 To make C/C++ integration easier you can use crates as
-                dev-dependencyo (build time dependency!).
+                dev-dependency (build time dependency!).
               </p>
 
               <p>
@@ -476,11 +488,25 @@ fn notify(&self) {
             </aside>
           </section>
 
-          <section>
+          <!-- ## CMake -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
             <h2>CMake</h2>
 
-            <h3>corrosion</h3>
+            <h3 class="fragment fade-in">corrosion</h3>
+            <pre class="fragment fade-in"><code data-trim data-noescape>
+cmake_minimum_required(VERSION 3.15)
+project(MyCoolProject LANGUAGES CXX)
 
+find_package(Corrosion REQUIRED)
+
+corrosion_import_crate(MANIFEST_PATH rust-lib/Cargo.toml)
+
+add_executable(cpp-exe main.cpp)
+target_link_libraries(cpp-exe PUBLIC rust-lib)</code></pre>
             <aside class="notes">
               <p>
                 The corrosion project on Github tries to make it simple to have
@@ -491,39 +517,31 @@ fn notify(&self) {
                 It will parse your cargo build system and expose all build
                 targets to cmake.
               </p>
+
             </aside>
-          </section>
-
-          <section>
-            <h2>CMake</h2>
-
-            <h3>corrosion</h3>
-            <pre><code data-trim data-noescape>
-cmake_minimum_required(VERSION 3.15)
-project(MyCoolProject LANGUAGES CXX)
-
-find_package(Corrosion REQUIRED)
-
-corrosion_import_crate(MANIFEST_PATH rust-lib/Cargo.toml)
-
-add_executable(cpp-exe main.cpp)
-target_link_libraries(cpp-exe PUBLIC rust-lib)</code></pre>
-            <aside class="notes"></aside>
           </section>
         </section>
 
+        <!-- # EPILOG -->
         <section
           data-background-image="slint-logo.svg"
           data-background-size="120px"
           data-background-position="right 5% top 5%"
         >
+          <!-- ## THANK YOU -->
           <section>
             <h2>Thank you!</h2>
             <p>Mail: tobias.hunger@slint-ui.com</p>
             <p>Twitter: @t_hunger</p>
           </section>
 
-          <section data-visibility="uncounted">
+          <!-- ## LINKS I -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+            data-visibility="uncounted"
+          >
             <h2>Links I</h2>
             <ul>
               <li>
@@ -550,7 +568,13 @@ target_link_libraries(cpp-exe PUBLIC rust-lib)</code></pre>
             </ul>
           </section>
 
-          <section data-visibility="uncounted">
+          <!-- ## LINKS II -->
+          <section
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+            data-visibility="uncounted"
+          >
             <h2>Links II</h2>
             <ul>
               <li>
