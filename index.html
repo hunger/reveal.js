@@ -23,7 +23,11 @@
         <!-- # INTRO -->
         <section>
           <!-- ## TITLE -->
-          <section style="text-align: right; margins: 100px; width: 100%">
+          <section style="text-align: right; margins: 100px; width: 100%"
+            data-background-image="slint-logo.svg"
+            data-background-size="120px"
+            data-background-position="right 5% top 5%"
+          >
             <h1 class="r-fit-text">Rust and C++</h1>
             <h3>Tobias Hunger</h3>
             <aside class="notes">
@@ -74,7 +78,11 @@
           </section>
 
           <!-- ## MOTIVATION -->
-          <section>
+          <section
+            data-background-image="slint-logo-full.svg"
+            data-background-size="480px"
+            data-background-position="right 5% top 5%"
+          >
             <h3>About me</h3>
             <ul>
               <li>Long time C++ Developer</li>
@@ -99,7 +107,11 @@
           >
             <h2>Slint</h2>
 
-            <h4>Scalable. Lightweight. Intuitive. Native. Toolkit.</h4>
+            <h4>Scalable Lightweight Intuitive Native UI Toolkit</h4>
+
+            <p>Implemented in 100% Rust</p>
+
+            <img data-src="rp-pico-printer.jpg" alt="Slint on RP pico" height="200px">
 
             <ul>
               <li class="fragment fade-in">Provides C++ API</li>
@@ -138,8 +150,8 @@
           >
             <h2>Topics</h2>
             <ul>
-              <li>Making Rust and C++ talk to each other</li>
-              <li>Build Projects mixing Rust and C++</li>
+              <li>Code Level Integration</li>
+              <li>Build-System Integration</li>
             </ul>
             <aside class="notes">
               <h3>Talk</h3>
@@ -150,19 +162,19 @@
           </section>
         </section>
 
-        <!-- # TALKING TO C++ AND RUST -->
+        <!-- # CODE LEVEL -->
         <section
           data-background-image="slint-logo.svg"
           data-background-size="120px"
           data-background-position="right 5% top 5%"
         >
-          <!-- ## TALKING -->
+          <!-- ## CODE LEVEL -->
           <section
             data-background-image="slint-logo.svg"
             data-background-size="120px"
             data-background-position="right 5% top 5%"
           >
-            <h2>Making Rust and C++ talk to each other</h2>
+            <h2>Code-level integration</h2>
             <aside class="notes">
               <p>Challenges:</p>
               <ul>
@@ -423,7 +435,7 @@ mod ffi {
 
 
             
-    updateA18y(&Event(obj));
+    updateA18y(Event(obj));
   });
 }</code></pre>
             <aside class="notes">
@@ -446,7 +458,7 @@ mod ffi {
     rust!(rearm [data: Pin<&A18yItemData> as "void*"] {
       data.arm_state_tracker();
     });
-    updateA18y(&Event(obj));
+    updateA18y(Event(obj));
   });
 }</code></pre>
             <aside class="notes">
@@ -464,9 +476,7 @@ mod ffi {
               </p>
 
               <p>
-                Inlining of <code>cpp!(...)</code> macro code: Tricky to get
-                right, but possible at the LLVM level with link time
-                optimization.
+                Slint uses cpp crate to integrate with existing C++ toolkits.
               </p>
             </aside>
           </section>
@@ -518,7 +528,7 @@ mod ffi {
             data-background-size="120px"
             data-background-position="right 5% top 5%"
           >
-            <h1>Building mixed projects</h1>
+            <h1>Build-system integration</h1>
 
             <aside class="notes">
               <p>
@@ -628,6 +638,10 @@ target_link_libraries(cpp-exe PUBLIC rust-lib)</code></pre>
               <p>
                 It will parse your cargo build system and expose all build
                 targets to cmake.
+              </p>
+
+              <p>
+                Slint uses corrosion to allow C++ people to work with slint.
               </p>
             </aside>
           </section>
