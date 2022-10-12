@@ -244,11 +244,11 @@
                 Typically works reliably as the programmer has already put in
                 the hard work by marking up functions and types.
               </p>
-            </aside>
 
-            <p>
-              These are just the most commonly used ones, more tools available.
-            </p>
+              <p>
+                These are just the most commonly used ones, more tools available.
+              </p>
+            </aside>
           </section>
 
           <!-- ## SEMI-AUTOMATIC -->
@@ -283,7 +283,7 @@
             <pre><code data-trim data-noescape data-line-numbers="1-2|3-6|8-12|14-21">
 #[cxx::bridge]
 mod ffi {
-    struct BlobMetadata {
+    struct Metadata {
         size: usize,
         tags: Vec&lt;String&gt;,
     }
@@ -297,9 +297,9 @@ mod ffi {
     unsafe extern "C++" {
         include!("demo/include/blobstore.h");
 
-        type BlobstoreClient;
+        type Client;
 
-        fn new_blobstore_client() -> UniquePtr&lt;BlobstoreClient&gt;;
+        fn new_client() -> UniquePtr&lt;Client&gt;;
         fn put(&self, parts: &mut MultiBuf) -> u64;
     }
 }</code></pre>
@@ -734,10 +734,10 @@ target_link_libraries(cpp-exe PUBLIC rust-lib)</code></pre>
         parallaxBackgroundImage: "background.jpg",
         parallaxBackgroundSize: "5376px 3040px",
       });
-      Reveal.configure({
-        showNotes: "separate-page",
-        pdfSeparateFragments: false,
-      });
+      // Reveal.configure({
+      //   showNotes: "separate-page",
+      //   pdfSeparateFragments: false,
+      // });
     </script>
   </body>
 </html>
