@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -17,20 +17,22 @@
     <link rel="stylesheet" href="plugin/highlight/monokai.css" />
   </head>
 
+  <!-- cSpell: ignore ettrich slint -->
+
   <body>
     <div class="reveal">
       <div class="slides">
-
         <!-- # INTRO -->
         <section>
           <!-- ## TITLE -->
-          <section style="text-align: right; height: 100%; width: 100%"
+          <section
+            style="text-align: right; height: 100%; width: 100%"
             data-background-image="background.jpg"
           >
             <h1 class="r-fit-text">UIs in Rust with Slint</h1>
             <h3>Tobias Hunger</h3>
             <aside class="notes">
-              <p>Organisational:</p>
+              <p>Meta:</p>
               <ul>
                 <li>Please tell me if I am too fast or too slow!</li>
 
@@ -43,12 +45,14 @@
                   reach out online!
                 </li>
               </ul>
-              <p>I got a really cool job at this conference: I am here to show
-                  you greener pastures</p>
+              <p>
+                I got a really cool job at this conference: I am here to show
+                you greener pastures
+              </p>
               <p>
                 About me: First looked into Qt the day some Matthias Ettrich
-                posted about doing some desktop environment based on it, but
-                did not get involved back then.
+                posted about doing some desktop environment based on it, but did
+                not get involved back then.
               </p>
               <p>
                 I was a bit involved during the KDE3/4 transition, but never
@@ -58,86 +62,102 @@
                 Worked on Qt tooling, especially build tools for over a decade.
               </p>
 
-              <p>Started to look into rust before pandemic to find out what the
-                    hype was all
-                    about. I moved over eventually. I now
-                    work on Slint, which I want to show you today.
+              <p>
+                Started to look into rust before pandemic to find out what the
+                hype was all about. I moved over eventually. I now work on
+                Slint, which I want to show you today.
               </p>
             </aside>
           </section>
-
         </section>
 
         <!-- #Rust -->
-          <section
-            data-background-image="rust-logo.svg"
-            data-background-size="120px"
-            data-background-position="right 5% top 5%"
-          >
+        <section
+          data-background-image="rust-logo.svg"
+          data-background-size="120px"
+          data-background-position="right 5% top 5%"
+        >
           <section>
-                <h1>Rust</h1>
+            <h1>Rust</h1>
 
-                <p class="fragment">memory safe</p>
-                <p class="fragment">fearless concurrency</p>
-                <p class="fragment">zero cost abstractions</p>
+            <p class="fragment">memory safe</p>
+            <p class="fragment">fearless concurrency</p>
+            <p class="fragment">zero cost abstractions</p>
 
             <aside class="notes">
-                  <p>I have 40min, so I will not be able to fully introduce
-                    Rust or Slint. I'll focus on getting you to a state where
-                  you can experiment yourself instead and point out some
-                  things I like along the way</p>
+              <p>
+                I have 40min, so I will not be able to fully introduce Rust or
+                Slint. I'll focus on getting you to a state where you can
+                experiment yourself instead and point out some things I like
+                along the way
+              </p>
 
-                  <p>The big selling point: It's memory safe. So you can not
-                  have dangling pointers ever... That's extensively covered, so
-                  I won't :-)</p>
+              <p>
+                The big selling point: It's memory safe. So you can not have
+                dangling pointers ever... That's extensively covered, so I won't
+                :-)
+              </p>
 
-                  <p>Memory safety leads to less  issues with concurrency as
-                    the rules introduced to make the language memory safe also
-                    happen to prevent data races.
-                  </p>
+              <p>
+                Memory safety leads to less issues with concurrency as the rules
+                introduced to make the language memory safe also happen to
+                prevent data races.
+              </p>
 
-                  <p>Finally zero cost abstractions: The language is in the
-                  same ball-park as C++ with regard to performance and runtime
-                  overhead.</p>
+              <p>
+                Finally zero cost abstractions: The language is in the same
+                ball-park as C++ with regard to performance and runtime
+                overhead.
+              </p>
             </aside>
           </section>
           <section>
-                <h1>my highlights</h1>
+            <h1>my highlights</h1>
 
-                <p class="fragment">community</p>
-                <p class="fragment">processes</p>
-                <p class="fragment">tooling</p>
+            <p class="fragment">community</p>
+            <p class="fragment">processes</p>
+            <p class="fragment">tooling</p>
 
             <aside class="notes">
-                  <h2>community</h2>
-                  <p>The community is fun to hang out in, friendly and
-                    diverse and young.</p>
-                  <p>Sometimes over-enthusiastic, see RiiR meme. Vut we were
-                  the same when we were young. Linus just told us to leave
-                  his kernel alone...</p>
-                  <h2>processes</h2>
-                  <p>Changes are proposed, discussed and implemented in the
-                  nightly compiler. They are tested there till there is
-                  agreement that the feature works and brings a benefit.</p>
-                  <p>Only then the feature gets declared stable and will then
-                    be in the next stable release (which arer 6 weeks apart!).
-                  </p>
-                  <p>Release testing involves a crater run: A big chunk of the
-                  entire language eco-system is built and any new build
-                  failure gets investigated.</p>
+              <h2>community</h2>
+              <p>
+                The community is fun to hang out in, friendly and diverse and
+                young.
+              </p>
+              <p>
+                Sometimes over-enthusiastic, see RiiR meme. Vut we were the same
+                when we were young. Linus just told us to leave his kernel
+                alone...
+              </p>
+              <h2>processes</h2>
+              <p>
+                Changes are proposed, discussed and implemented in the nightly
+                compiler. They are tested there till there is agreement that the
+                feature works and brings a benefit.
+              </p>
+              <p>
+                Only then the feature gets declared stable and will then be in
+                the next stable release (which are 6 weeks apart!).
+              </p>
+              <p>
+                Release testing involves a crater run: A big chunk of the entire
+                language eco-system is built and any new build failure gets
+                investigated.
+              </p>
 
-                  <h2>tooling</h2>
-                  <p>I hope you will agree with me when I show how to get
-                    your experimental environment up!
-                  </p>
+              <h2>tooling</h2>
+              <p>
+                I hope you will agree with me when I show how to get your
+                experimental environment up!
+              </p>
             </aside>
           </section>
           <section>
-                <h1>Let's get started with Rust</h1>
+            <h1>Let's get started with Rust</h1>
           </section>
         </section>
 
-            <section>
+        <section>
           Section 2
           <section>Slide 2.1</section>
           <section>Slide 2.2</section>
@@ -176,7 +196,8 @@
               </li>
             </ul>
           </section>
-       </div>
+        </section>
+      </div>
     </div>
 
     <script src="dist/reveal.js"></script>
