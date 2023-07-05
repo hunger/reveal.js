@@ -26,10 +26,10 @@
         <section>
           <!-- ## TITLE -->
           <section
-            style="text-align: right; height: 100%; width: 100%"
+            style="text-align: right; height: 90%; width: 100%"
             data-background-image="background.jpg"
           >
-            <h1 class="r-fit-text">UIs in Rust with Slint</h1>
+            <h1 class="r-fit-text">UIs in Rust & Slint</h1>
             <h3>Tobias Hunger</h3>
             <aside class="notes">
               <p>Meta:</p>
@@ -71,12 +71,13 @@
           </section>
         </section>
 
-        <!-- #Rust -->
+        <!-- # Rust -->
         <section
           data-background-image="rust-logo.svg"
           data-background-size="120px"
           data-background-position="right 5% top 5%"
         >
+          <!-- Rust intro I -->
           <section>
             <h1>Rust</h1>
 
@@ -111,6 +112,7 @@
               </p>
             </aside>
           </section>
+          <!-- Rust intro II -->
           <section>
             <h1>my highlights</h1>
 
@@ -120,16 +122,19 @@
 
             <aside class="notes">
               <h2>community</h2>
+
               <p>
-                The community is fun to hang out in, friendly and diverse and
+                The community is fun to hang out in, friendly, diverse and
                 young.
               </p>
               <p>
-                Sometimes over-enthusiastic, see RiiR meme. Vut we were the same
+                Sometimes over-enthusiastic, see RiiR meme: We were the same
                 when we were young. Linus just told us to leave his kernel
                 alone...
               </p>
+
               <h2>processes</h2>
+
               <p>
                 Changes are proposed, discussed and implemented in the nightly
                 compiler. They are tested there till there is agreement that the
@@ -146,24 +151,169 @@
               </p>
 
               <h2>tooling</h2>
+
               <p>
                 I hope you will agree with me when I show how to get your
                 experimental environment up!
               </p>
             </aside>
           </section>
+          <!-- Rust installation -->
           <section>
-            <h1>Let's get started with Rust</h1>
+            <h1>Let's install Rust</h1>
 
-            <p class="fragment">rustup</p>
-            <p class="fragment">cargo init</p>
+            <pre clas="bash"><code class="fragment">
+&gt; curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+            </code></pre>
+            <pre class="bash"><code class="fragment">
+1) Proceed with installation (default)
+2) Customize installation
+3) Cancel installation
+&gt;1
+            </code></pre>
+            <pre class="bash"><code class="fragment">
+Rust is installed now. Great!
+            </code></pre>
+            <!-- <video width="100%"; class="fragment-fade-in-out"; src="./rustup_install,mp4"></video> -->
+
+            <aside class="notes">
+              <p>
+                You can of coure also use distribution provided packages, but
+                this just works everywhere (but on windows: Go to
+                https://rustup.rs/ and get the installer)
+              </p>
+
+              <p>
+                We are not going to use anything not part of this default
+                install!
+              </p>
+
+              <p>
+                I did this before the presentation as it can take a bit of time
+                to download...
+              </p>
+            </aside>
+          </section>
+          <!-- Rust test -->
+          <section>
+            <h1>Let's test Rust</h1>
+
+            <aside class="notes">
+              <ul>
+                <li><code>cargo init ui-project</code></li>
+                <li><code>cd ui-project</code></li>
+                <li>Show <code>main.rs</code> and <code>Cargo.toml</code></li>
+                <li>Do <code>cargo run</code></li>
+              </ul>
+              <p>:tada: Hello World</p>
+            </aside>
           </section>
         </section>
 
-        <section>
-          Section 2
-          <section>Slide 2.1</section>
-          <section>Slide 2.2</section>
+        <!-- # Slint -->
+        <section
+          data-background-image="slint-logo.svg"
+          data-background-size="120px"
+          data-background-position="right 5% top 5%"
+        >
+          <!-- # Slint intro -->
+          <section>
+            <h1>Slint</h1>
+
+            <p>
+              Slint defines UIs using a <em>declarative</em>,
+              <em>strongly typed</em>, <em>non-touring complete</em> description
+              language.
+            </p>
+
+            <p class="fragment">
+              Slint can be used from <em>Rust</em>, <em>C++</em> or
+              <em>Javascript</em> code.
+            </p>
+
+            <p class="fragment">
+              Slint code is <em>compiled</em> to Rust or C++ code or
+              <em>interpreted</em>.
+            </p>
+
+            <p class="fragment">
+              Slint scales from <em>micro controllers</em> to
+              <em>workstations</em>.
+            </p>
+
+            <aside class="notes">
+              <p>Slint might look a bit familiar to some of you...</p>
+
+              <ul>
+                <li>
+                  declarative: You define components out of a tree of other
+                  components that all have properties
+                </li>
+                <li>strongly typed: Everything in Slin has a fixed type</li>
+                <li>
+                  not touring complete: No arbitrary expressions, toolable!
+                </li>
+              </ul>
+
+              <p>
+                Slint integrates into several languages. We try to have an API
+                that feels native in all of them.
+              </p>
+
+              <p>
+                Compiled: Low resource usage! Demo runs on &lt;300KiB of RAM.
+              </p>
+
+              <p>
+                ... and thus scales from a line buffer running on a micro
+                controller to workstation class class machines with GPUs
+              </p>
+            </aside>
+          </section>
+
+          <!-- # Slint license -->
+          <section>
+            <h1>legalese</h1>
+
+            <p class="fragment">
+              <em>GPLv3</em>, <em>commercial</em> or
+              <em>royalty free</em> license options.
+            </p>
+
+            <p class="fragment">
+              CLA: contributions are under MIT license. We relicense as needed.
+            </p>
+
+            <aside class="notes">
+              <p>Because FLOSS people care about licensing</p>
+            </aside>
+          </section>
+
+          <!-- # Slint Demo -->
+          <section>
+            <h1>Demo</h1>
+
+            <aside class="notes">
+              <ul>
+                <li>cargo add slint</li>
+                <li>Add some docs into main.rs</li>
+                <li>cargo doc --open -- Docs of _everything_</li>
+                <li>More tools: cargo fmt</li>
+                <li>add slint! macro and fill in some code</li>
+                <li>Use preview</li>
+              </ul>
+            </aside>
+          </section>
+
+          <!-- # Slint pointers -->
+          <section>
+            <ul>
+              <li>Try out Slint syntax: https://slintpad.com/</li>
+              <li>Documentation: https://slint.dev/docs</li>
+            </ul>
+
+            <aside class="notes"></aside>
+          </section>
         </section>
 
         <!-- # EPILOG -->
@@ -175,8 +325,9 @@
           <!-- ## THANK YOU -->
           <section>
             <h2>Thank you</h2>
-            <p>Mail: tobias.hunger@slint.dev</p>
-            <p>Mastodon: @hunger@linuxrocks.online</p>
+            <p style="color: #2379f4">https://slint.dev/</p>
+            <p style="padding-top: 2em">tobias.hunger@slint.dev</p>
+            <p>@hunger@linuxrocks.online</p>
 
             <!-- TODO: Add this!
             <img data-src="qr_code.png" alt="QR Code for slides">
@@ -193,9 +344,18 @@
             <h2>Links</h2>
             <ul>
               <li>
-                <a href="https://github.com/KDE/rust-qt-binding-generator"
-                  >KDE rust binding generator</a
+                Rust book:
+                <a href="https://doc.rust-lang.org/book/"
+                  >https://doc.rust-lang.org/book/</a
                 >
+              </li>
+              <li>
+                Try out Slint syntax:
+                <a href="https://slintpad.com/">https://slintpad.com/</a>
+              </li>
+              <li>
+                Slint Documentation:
+                <a href="https://slint.dev/docs">https://slint.dev/docs</a>
               </li>
             </ul>
           </section>
