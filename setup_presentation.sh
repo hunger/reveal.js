@@ -18,14 +18,10 @@ cd "${HOME}/src/reveal.js" || exit
 
 rm -rf "${HOME}/.cargo" "${HOME}/.rustup"
 
-rm -rf ~/src/ui-project ~/src/reveal.js/ui-project
-
 PATH="/usr/bin" curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 echo -e "[build]\nrustc-wrapper = \"${EX}/bin/sccache\"" > "${HOME}/.cargo/config.toml"
 
 "${EX}/bin/sccache" -z
-
-( cd "${HOME}/src/reveal.js/heater" && cargo build && cargo build --release )
 
 npm install
 
