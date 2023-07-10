@@ -77,6 +77,44 @@
           data-background-size="120px"
           data-background-position="right 5% top 5%"
         >
+          <!-- Rust installation -->
+          <section>
+            <h1>Let's install Rust</h1>
+
+            <pre clas="bash"><code class="fragment">
+&gt; curl --proto '=https' --tlsv1.2 -sSf \
+    "https://sh.rustup.rs" | sh
+            </code></pre>
+            <pre class="bash"><code class="fragment">
+1) Proceed with installation (default)
+2) Customize installation
+3) Cancel installation
+&gt;1
+            </code></pre>
+            <pre class="bash"><code class="fragment">
+Rust is installed now. Great!
+            </code></pre>
+            <!-- <video width="100%"; class="fragment-fade-in-out"; src="./rustup_install,mp4"></video> -->
+
+            <aside class="notes">
+              <p>
+                You can of coure also use distribution provided packages, but
+                this just works everywhere (but on windows: Go to
+                https://rustup.rs/ and get the installer)
+              </p>
+
+              <p>
+                We are not going to use anything not part of this default
+                install!
+              </p>
+
+              <p>
+                I did this before the presentation as it can take a bit of time
+                to download...
+              </p>
+            </aside>
+          </section>
+
           <!-- Rust intro I -->
           <section>
             <h1>Rust</h1>
@@ -112,6 +150,7 @@
               </p>
             </aside>
           </section>
+
           <!-- Rust intro II -->
           <section>
             <h1>my highlights</h1>
@@ -158,43 +197,7 @@
               </p>
             </aside>
           </section>
-          <!-- Rust installation -->
-          <section>
-            <h1>Let's install Rust</h1>
 
-            <pre clas="bash"><code class="fragment">
-&gt; curl --proto '=https' --tlsv1.2 -sSf \
-    "https://sh.rustup.rs" | sh
-            </code></pre>
-            <pre class="bash"><code class="fragment">
-1) Proceed with installation (default)
-2) Customize installation
-3) Cancel installation
-&gt;1
-            </code></pre>
-            <pre class="bash"><code class="fragment">
-Rust is installed now. Great!
-            </code></pre>
-            <!-- <video width="100%"; class="fragment-fade-in-out"; src="./rustup_install,mp4"></video> -->
-
-            <aside class="notes">
-              <p>
-                You can of coure also use distribution provided packages, but
-                this just works everywhere (but on windows: Go to
-                https://rustup.rs/ and get the installer)
-              </p>
-
-              <p>
-                We are not going to use anything not part of this default
-                install!
-              </p>
-
-              <p>
-                I did this before the presentation as it can take a bit of time
-                to download...
-              </p>
-            </aside>
-          </section>
           <!-- Rust test -->
           <section>
             <h1>Let's test Rust</h1>

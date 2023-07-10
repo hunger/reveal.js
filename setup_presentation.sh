@@ -1,27 +1,10 @@
 #! /usr/bin/bash
 
-sudo pacman -S --noconfirm vscode chromium qt6-base qt6-tools
-
-/usr/bin/code --install-extension rust-lang.rust-analyzer --install-extension Slint.slint
+sudo pacman -S --noconfirm chromium
 
 HOME="/home/dev"
-EX="/home/extra"
 
 cd "${HOME}/src/reveal.js" || exit
-
-# Clean up local:
-( cd "${HOME}"/.local/bin \
-  && find . -type l -exec rm \{\} \; )
-( cd "${HOME}/.local/bin" \
-  && ln -s "${EX}/bin/atuin" . \
-  && ln -s "${EX}/bin/starship" . )
-
-rm -rf "${HOME}/.cargo" "${HOME}/.rustup"
-
-PATH="/usr/bin" curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-echo -e "[build]\nrustc-wrapper = \"${EX}/bin/sccache\"" > "${HOME}/.cargo/config.toml"
-
-"${EX}/bin/sccache" -z
 
 npm install
 

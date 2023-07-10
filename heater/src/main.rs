@@ -1,6 +1,6 @@
 use slint::slint;
 
-use heater::{add, div};
+use uiproject::{add, div, sub, mul};
 
 slint! {
 

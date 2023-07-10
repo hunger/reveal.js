@@ -13,8 +13,28 @@ pub fn add(a: i32, b: i32) -> i32 {
     a + b
 }
 
-/// Usually doc comments may include sections "Examples", "Panics" and "Failures".
+/// Subtract two numbers
 ///
+/// ```
+/// # use crate::sub;
+/// let result = sub(2, 3);
+/// assert_eq!(result, -1);
+/// ```
+pub fn sub(a: i32, b: i32) -> i32 {
+    a - b
+}
+
+/// Multiply two numbers
+///
+/// ```
+/// # use crate::mul;
+/// let result = mul(2, 3);
+/// assert_eq!(result, 6);
+/// ```
+pub fn mul(a: i32, b: i32) -> i32 {
+    a * b
+}
+
 /// The next function divides two numbers.
 ///
 /// # Examples
